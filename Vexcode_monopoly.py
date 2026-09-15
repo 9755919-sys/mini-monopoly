@@ -1,19 +1,28 @@
 screen_precision = 0
 console_precision = 0
-myVariable = 0
-current_space_number = 0
-dice1 = 0
-dice2 = 0
-space_to_move = 0
 FWD = Event()
 LT = Event()
 RT = Event()
 right_turn = Event()
 move_forward = Event()
 left_turn = Event()
+myVariable = 0
+current_space_number = 0
+dice1 = 0
+dice2 = 0
+space_to_move = 0
+properties_visited = 0
+RED1 = 0
+RED2 = 0
+BLUE1 = 0
+BLUE2 = 0
+GREEN1 = 0
+GREEN2 = 0
+YELLOW1 = 0
+YELLOW2 = 0
 
 def roll_dice():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     dice1 = int(round(urandom.uniform(1, 4), 2))
     brain.screen.print(str("Rolled a:") + str(dice1))
     brain.screen.next_row()
@@ -23,7 +32,7 @@ def roll_dice():
     space_to_move = dice1 + dice2
 
 def move():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     brain.screen.print(str(space_to_move) + str("spaces!"))
     brain.screen.next_row()
     for repeat_count in range(int(space_to_move)):
@@ -42,8 +51,8 @@ def move():
         wait(5, MSEC)
 
 def play_game():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
-    while True:
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
+    while not properties_visited == 8:
         roll_dice()
         move()
         complete_task()
@@ -54,73 +63,46 @@ def play_game():
         wait(5, MSEC)
 
 def complete_task():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     brain.screen.print(str("Landedonspace") + str(current_space_number))
     brain.screen.next_row()
     wait(1, SECONDS)
-    if current_space_number == 1:
-        # Space = GO
-        for repeat_count2 in range(4):
-            left_turn.broadcast_and_wait()
-            wait(5, MSEC)
-    elif current_space_number == 4:
-        # Space = JAIL
-        wait(3, SECONDS)
-    elif current_space_number == 7:
-        # Space = Free Parking
-        wait(5, SECONDS)
-    elif current_space_number == 10:
-        # Space = Go to Jail
-        right_turn.broadcast_and_wait()
-        for repeat_count3 in range(3):
-            move_forward.broadcast_and_wait()
-            wait(5, MSEC)
-        left_turn.broadcast_and_wait()
-        for repeat_count4 in range(3):
-            move_forward.broadcast_and_wait()
-            wait(5, MSEC)
-        for repeat_count5 in range(2):
-            right_turn.broadcast_and_wait()
-            wait(5, MSEC)
-        current_space_number = 4
-        wait(1, SECONDS)
-    else:
-        # Space = Blue 1 or 2, Green 1 or 2, Yellow 1 or 2, or Red 1 or 2
-        right_turn.broadcast_and_wait()
-        move_forward.broadcast_and_wait()
-        for repeat_count6 in range(2):
-            left_turn.broadcast_and_wait()
-            wait(5, MSEC)
-        move_forward.broadcast_and_wait()
-        right_turn.broadcast_and_wait()
-
-def left_turn_callback_0():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
-    motor_1.spin_for(REVERSE, 220, DEGREES)
 
 def when_started1():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     current_space_number = 1
+    BLUE1 = "false"
+    BLUE2 = "false"
+    GREEN1 = "false"
+    GREEN2 = "false"
+    RED1 = "false"
+    RED2 = "false"
+    YELLOW1 = "false"
+    YELLOW2 = "false"
     play_game()
 
+def left_turn_callback_0():
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
+    motor_1.spin_for(REVERSE, 220, DEGREES)
+
 def left_turn_callback_1():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     motor_5.spin_for(FORWARD, 220, DEGREES)
 
 def right_turn_callback_0():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     motor_1.spin_for(FORWARD, 220, DEGREES)
 
 def right_turn_callback_1():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     motor_5.spin_for(REVERSE, 220, DEGREES)
 
 def move_forward_callback_0():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     motor_1.spin_for(FORWARD, 400, DEGREES)
 
 def move_forward_callback_1():
-    global myVariable, current_space_number, dice1, dice2, space_to_move, FWD, LT, RT, right_turn, move_forward, left_turn, my_event, screen_precision, console_precision
+    global FWD, LT, RT, right_turn, move_forward, left_turn, my_event, myVariable, current_space_number, dice1, dice2, space_to_move, properties_visited, RED1, RED2, BLUE1, BLUE2, GREEN1, GREEN2, YELLOW1, YELLOW2, screen_precision, console_precision
     motor_5.spin_for(FORWARD, 400, DEGREES)
 
 # system event handlers
